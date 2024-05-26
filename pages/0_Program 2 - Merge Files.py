@@ -14,16 +14,19 @@ def upload():
     '''To let users upload the files they want to merge'''
     uploaded_files = st.file_uploader("Choose CSV file(s) you want to merge", type = 'csv', accept_multiple_files=True)
     for uploaded_file in uploaded_files:
-        bytes_data = uploaded_file.read()
         st.write("filename:", uploaded_file.name)
-        st.write(bytes_data)
     return uploaded_files
+
 
 def show_uploads(uploaded_files):
     '''To show the preview of the files'''
-    for uploaded_file in uploaded_files:
-        df = pd.read_csv(uploaded_file)
-        st.table(df[:5])
+    if uploaded_files:
+        dfs = []  # List to store DataFrames read from uploaded files
+        for file in uploaded_files:
+            df = pd.read_csv(file)
+            dfs.append(df)
+    st.table(dfs[0])
+
 
 def main():
     '''The main function includes other functions'''

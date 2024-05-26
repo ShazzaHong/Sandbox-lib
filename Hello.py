@@ -25,7 +25,7 @@ import streamlit as st
 
 API_KEY = "273a432a-4c0f-4cad-b1cb-304a90bdc6a1"
 API_URL_HEAD = "https://data.moenv.gov.tw/api/v2/aqx_p_488?language=en&offset=0&limit=1000&api_key="
-SUCCESS_MSG = "Successfully downloaded. Please check your folder with the file ends with _aqi_data.csv "
+SUCCESS_MSG = "Successfully downloaded. Please check your folder with the file ends with '_aqi_data.csv' "
 
 
 def call_api():
@@ -87,7 +87,7 @@ def combine_lists(selected_lst):
 
 def load_data(cols_list, start_str, end_str):
     '''Filter attributes and load data to the empty data frame.'''
-    st.write(f"Loading data from {start_str} to {end_str}...")
+    st.write(f"Loading data from {start_str} to {end_str}...Preview:")
     # make API call to the Air quality index (AQI)(historical data)
     limit_data = requests.get(API_URL_HEAD + API_KEY
                             + '&filters=datacreationdate,GR,' + start_str + ':00'
@@ -101,7 +101,7 @@ def load_data(cols_list, start_str, end_str):
         # Append the filtered dictionary to the list of rows
         rows.append(filtered_dict)
     df_records = pd.DataFrame(rows)
-    st.table(df_records)
+    st.table(df_records[:2])
     return df_records
     
 
