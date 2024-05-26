@@ -7,22 +7,30 @@
    order of columns since we have limitation on extracting API data.
 """
 
-#from typing import Any
-
-import numpy as np
 import streamlit as st
-# from streamlit.hello.utils import show_code
 
-uploaded_files = st.file_uploader("Choose a CSV file", accept_multiple_files=True)
+def upload():
+    '''To let users upload the files they want to merge'''
+    uploaded_files = st.file_uploader("Choose a CSV file", accept_multiple_files=True)
+    for uploaded_file in uploaded_files:
+        bytes_data = uploaded_file.read()
+        st.write("filename:", uploaded_file.name)
+        st.write(bytes_data)
 
-for uploaded_file in uploaded_files:
-    bytes_data = uploaded_file.read()
-    st.write("filename:", uploaded_file.name)
-    st.write(bytes_data)
+def main():
+    '''The main function includes other functions'''
+    st.write("# Merge CSV Files")
+    st.markdown(
+        """This program is mainly to merge multiple csv files with same columns and 
+        order of columns since we have limitation on extracting API data."""
+                )
+    st.sidebar.header("2 - Merge CSV Files")
+    st.write(
+        """This program is mainly to merge multiple csv files with same columns and 
+    order of columns since we have limitation on extracting API data."""
+    )
+    upload()
 
-st.markdown("# Merge CSV Files")
-st.sidebar.header("2 - Merge CSV Files")
-st.write(
-    """This program is mainly to merge multiple csv files with same columns and 
-   order of columns since we have limitation on extracting API data."""
-)
+    
+if __name__ == "__main__":
+    main()
