@@ -12,9 +12,8 @@ import streamlit as st
 
 def upload():
     '''To let users upload the files they want to merge'''
-    uploaded_files = st.file_uploader("Choose CSV file(s) you want to merge", type = 'csv', accept_multiple_files=True)
-    for uploaded_file in uploaded_files:
-        st.write("filename:", uploaded_file.name)
+    uploaded_files = st.file_uploader("Choose CSV file(s) you want to merge", 
+                                      type = 'csv', accept_multiple_files = True)
     return uploaded_files
 
 
@@ -25,7 +24,7 @@ def show_uploads(uploaded_files):
         for file in uploaded_files:
             df = pd.read_csv(file)
             dfs.append(df)
-    st.table(dfs[0])
+    st.table(dfs[0][:5])
 
 
 def main():
