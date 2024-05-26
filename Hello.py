@@ -122,7 +122,13 @@ def download_file(df_records, start_str, end_str, data_load_state):
         data_load_state.text(SUCCESS_MSG)
 
 
-def preview_chart(df_records):
+def preview_df(df_records):
+    '''To show the preview of the files'''
+    st.write('Preview dataframe:')
+    st.dataframe(df_records[:1])
+
+
+#def preview_chart(df_records):
     '''To preview the plotting function provided and hint users that there is another page 
     they can use to print different kinds of chart.'''
 
@@ -167,7 +173,8 @@ def main():
         download_file(df_records, start_str, end_str, data_load_state)
     elif len(selected_lst) < 1:
         st.warning('Download button will only be shown when there are more than one sensor/pollutant selected.', icon="⚠️")
-    preview_chart(df_records)
+    preview_df(df_records)
+    #preview_chart(df_records)
 
 
 if __name__ == "__main__":
