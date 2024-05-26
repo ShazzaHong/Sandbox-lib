@@ -24,7 +24,9 @@ def show_uploads(uploaded_files):
         for file in uploaded_files:
             df = pd.read_csv(file)
             dfs.append(df)
-    st.table(dfs[0][:5])
+    for num in range(len(uploaded_files)):
+        st.write(f'Preview of fisrt file {uploaded_files[num]}:')
+        st.table(dfs[0][:2])
 
 
 def main():
