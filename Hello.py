@@ -163,20 +163,24 @@ def main():
     start_str = start_date_time(time_list)
     if start_str:
         end_str = end_date_time(start_str, time_list)
-
     st.subheader('Step 2. Select Sensor(s)/Pollutant(s)') 
-    selected_lst = st.multiselect("Please select at least one. For tutor, please select more than 3.",
-                             LIST_SENSORS, [LIST_SENSORS[0]]) 
+    selected_lst = st.multiselect("Please select at least one. For tutor, please select more "
+                                  "than 3.", LIST_SENSORS, [LIST_SENSORS[0]]) 
     if len(selected_lst) >= 1 and st.button("Download"):
         cols_list = combine_lists(selected_lst)
         df_records, data_load_state = load_data(cols_list, start_str, end_str)
         preview_df(df_records)
         download_file(df_records, start_str, end_str, data_load_state)
     elif len(selected_lst) < 1:
-        st.warning('Download button will only be shown when there are more than one sensor/pollutant selected.', icon="⚠️")
-    
-    #preview_chart(df_records)
-
+        st.warning('Download button will only be shown when there are more than one '
+                   'sensor/pollutant selected.', icon="⚠️")
+    preview_chart(df_records)
+    st.markdown(
+        """
+        **👈 Select Program 3 from the sidebar to see more charts** 
+        (Please ignore the demo pages)
+        """
+    )
 
 if __name__ == "__main__":
     main()
