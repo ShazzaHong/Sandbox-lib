@@ -19,22 +19,40 @@ BASIC_COL_SET = set(['siteid', 'sitename', 'datacreationdate', 'aqi', 'status'])
 class FileHandler:
     '''This class is mainly to handle files. '''
     def __init__(self):
+        '''Initialiser'''
         self.uploaded_files = []
 
     def upload_files(self):
-        # Upload files
-        self.uploaded_files = st.file_uploader("Upload files", accept_multiple_files=True)
+        '''Upload files'''
+        uploaded_filenames = []
+        self.uploaded_files = st.file_uploader("Upload files", accept_multiple_files = True)
+        for uploaded_file in self.uploaded_files:
+            uploaded_filenames.append(uploaded_file.name)
+        return uploaded_filenames
 
     def process_files(self):
+        '''To read the file and convert it to pandas dataframe if no error found.'''
+        dfs = []
         for uploaded_file in self.uploaded_files:
             try:
-                # Attempt to read the uploaded file
                 file_contents = uploaded_file.read().decode("utf-8")
                 df = pd.read_csv(io.StringIO(file_contents))
-                st.write("DataFrame from uploaded file:")
-                st.write(df[:5])
+                dfs = dfs.append(df)
+                st.write(f"DataFrame from uploaded file - {uploaded_file.name}:")
+                st.write(df[:2])
+                return dfs
             except FileNotFoundError:
                 st.error("File not found. Please make sure you uploaded the correct files.")
+    
+    def has_basic_cols(self, dfs):
+        '''To check if the files have basic columns.'''
+        for df in dfs:
+            for col in df[0]:
+                if col not in BASIC_COL_SET:
+                    st.write(f'{file} is missing basic columns. This program only merges files '
+                            f'with {BASIC_COL_SET} columns. Please delete the file and reupload.')
+                    #return False
+        print('done')   
 
 
 def main():
@@ -49,9 +67,9 @@ def main():
     file_handler = FileHandler()
 
     # Call methods to upload and process files
-    file_handler.upload_files()
-    file_handler.process_files()
-        
+    uploaded_filenames = file_handler.upload_files()
+    dfs = file_handler.process_files()
+    file_handler.has_basic_cols(dfs)
 
 if __name__ == "__main__":
     main()
