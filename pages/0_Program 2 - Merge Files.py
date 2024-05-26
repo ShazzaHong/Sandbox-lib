@@ -40,6 +40,7 @@ class FileHandler:
                 list_of_dfs = list_of_dfs.append(df)
                 st.write(f"DataFrame from uploaded file - {uploaded_file.name}:")
                 st.write(df[:2])
+                st.write(type(list_of_dfs))
                 return list_of_dfs
             except FileNotFoundError:
                 st.error("File not found. Please make sure you uploaded the correct files.")
@@ -78,11 +79,12 @@ def main():
 
     # Call methods to upload and process files
     list_of_dfs = file_handler.upload_files()
-    file_handler.process_files()
-    if file_handler.has_basic_cols(list_of_dfs):
-        st.success("All DataFrames contain basic columns.")
-    else:
-        st.error("Some DataFrames are missing basic columns.")
+    if len(list_of_dfs) > 0:
+        file_handler.process_files()
+        if file_handler.has_basic_cols(list_of_dfs):
+            st.success("All DataFrames contain basic columns.")
+        else:
+            st.error("Some DataFrames are missing basic columns.")
 
 if __name__ == "__main__":
     main()
