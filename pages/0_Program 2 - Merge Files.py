@@ -44,12 +44,12 @@ class FileHandler:
             except FileNotFoundError:
                 st.error("File not found. Please make sure you uploaded the correct files.")
     
-    def has_basic_cols(self, dfs):
+    def has_basic_cols(self, dfs, uploaded_filenames):
         '''To check if the files have basic columns.'''
         for df in dfs:
             for col in df[0]:
                 if col not in BASIC_COL_SET:
-                    st.write(f'{file} is missing basic columns. This program only merges files '
+                    st.write(f'Missing basic columns. This program only merges files '
                             f'with {BASIC_COL_SET} columns. Please delete the file and reupload.')
                     #return False
         print('done')   
@@ -69,7 +69,7 @@ def main():
     # Call methods to upload and process files
     uploaded_filenames = file_handler.upload_files()
     dfs = file_handler.process_files()
-    file_handler.has_basic_cols(dfs)
+    file_handler.has_basic_cols(dfs, uploaded_filenames)
 
 if __name__ == "__main__":
     main()
