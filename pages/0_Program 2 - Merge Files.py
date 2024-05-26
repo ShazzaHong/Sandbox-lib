@@ -28,33 +28,27 @@ class FileHandler:
         self.uploaded_files = st.file_uploader("Upload files", accept_multiple_files = True)
         for uploaded_file in self.uploaded_files:
             uploaded_filenames.append(uploaded_file.name)
-        # return uploaded_filenames
+        return uploaded_filenames # delete if not using
 
     def process_files(self):
-        '''To read the file and convert it to pandas dataframe if no error found.'''
+        '''To read the file and convert it to pandas dataframe if no error found.
+        At the same time, collect the column names (headers) of csv files and 
+        store in a dictionary for later use.'''
         list_of_dfs = []
+        dict_of_headers = {}
         for uploaded_file in self.uploaded_files:
             try:
                 file_contents = uploaded_file.read().decode("utf-8")
                 df = pd.read_csv(io.StringIO(file_contents))
                 list_of_dfs = list_of_dfs.append(df)
+                col_list = df.columns.tolist()
+                dict_of_headers[uploaded_file.name] = col_list
                 st.write(f"DataFrame from uploaded file - {uploaded_file.name}:")
                 st.write(df[:2])
                 st.write(type(list_of_dfs))
-                return list_of_dfs
+                return list_of_dfs, dict_of_headers
             except FileNotFoundError:
                 st.error("File not found. Please make sure you uploaded the correct files.")
-
-    def get_headers(self):
-        '''To extract the column names (headers) of csv files and store in a dictionary.'''
-        dict_of_headers = {}
-        for uploaded_file in self.uploaded_files:
-            uploaded_file.name
-            file_contents = uploaded_file.read().decode("utf-8")
-            df = pd.read_csv(io.StringIO(file_contents))
-            col_list = df.columns.tolist()
-            dict_of_headers[uploaded_file.name] = col_list
-        return dict_of_headers
 
 
     def de_has_basic_cols(self, list_of_dfs):
@@ -88,13 +82,16 @@ def main():
         """
         )
     
-    # Create an instance of FileHandler
+    # Create an instance of FileHandler (class)
     file_handler = FileHandler()
 
     # Call methods to upload and process files
-    file_handler.upload_files()
-    list_of_dfs = file_handler.process_files()
-    file_handler.get_headers()
+    uploaded_filenames = file_handler.upload_files()
+    
+    if file_handler.process_files():
+        list_of_dfs, dict_of_headers = file_handler.process_files()
+        print('success')
+
 
 if __name__ == "__main__":
     main()
