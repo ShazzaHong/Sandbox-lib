@@ -87,7 +87,7 @@ def combine_lists(selected_lst):
 
 def load_data(cols_list, start_str, end_str):
     '''Filter attributes and load data to the empty data frame.'''
-    data_load_state = st.text(f"Loading data from {start_str} to {end_str}...Preview:")
+    data_load_state = st.text(f"Loading data from {start_str} to {end_str}...")
     # make API call to the Air quality index (AQI)(historical data)
     limit_data = requests.get(API_URL_HEAD + API_KEY
                             + '&filters=datacreationdate,GR,' + start_str + ':00'
@@ -101,7 +101,6 @@ def load_data(cols_list, start_str, end_str):
         # Append the filtered dictionary to the list of rows
         rows.append(filtered_dict)
     df_records = pd.DataFrame(rows)
-    st.table(df_records[:2])
     return df_records, data_load_state
     
 
@@ -128,9 +127,10 @@ def preview_df(df_records):
     st.dataframe(df_records[:1])
 
 
-#def preview_chart(df_records):
+def preview_chart(df_records):
     '''To preview the plotting function provided and hint users that there is another page 
     they can use to print different kinds of chart.'''
+    st.line_chart(df_records, x = "datacreationdate", y = df_records[0][5:])
 
 
 def main():
