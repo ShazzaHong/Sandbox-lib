@@ -101,6 +101,7 @@ def load_data(cols_list, start_str, end_str):
         # Append the filtered dictionary to the list of rows
         rows.append(filtered_dict)
     df_records = pd.DataFrame(rows)
+    st.table(df_records)
     return df_records
     
 
@@ -144,7 +145,7 @@ def main():
     if start_str:
         end_str = end_date_time(start_str, time_list)
     lst_sensorid = ['pm2.5', 'so2', 'o3', 'co', 'pm10', 'no2', 'no']
-    st.subheader('Step 2. Select Sensor(s)/Pollutant') 
+    st.subheader('Step 2. Select Sensor(s)/Pollutant(s)') 
     selected_lst = st.multiselect("Please select at least one. For tutor, please select more than 3.",
                              lst_sensorid, [lst_sensorid[0]]) 
     if len(selected_lst) >= 1 and st.button("Download"):

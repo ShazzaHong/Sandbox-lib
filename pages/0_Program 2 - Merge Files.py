@@ -7,11 +7,12 @@
    order of columns since we have limitation on extracting API data.
 """
 
+import pandas as pd
 import streamlit as st
 
 def upload():
     '''To let users upload the files they want to merge'''
-    uploaded_files = st.file_uploader("Choose a CSV file", type = 'csv', accept_multiple_files=True)
+    uploaded_files = st.file_uploader("Choose CSV file(s) you want to merge", type = 'csv', accept_multiple_files=True)
     for uploaded_file in uploaded_files:
         bytes_data = uploaded_file.read()
         st.write("filename:", uploaded_file.name)
@@ -21,15 +22,8 @@ def upload():
 def show_uploads(uploaded_files):
     '''To show the preview of the files'''
     for uploaded_file in uploaded_files:
-        infile = open(uploaded_file)
-        lines = infile.read().splitlines()
-        infile.close()
-        for line in lines[:5]:
-            line = line.split(',')
-            table = []
-            table.append(line)
-            # Display the uploaded file
-            st.table(table)
+        df = pd.read_csv(uploaded_file)
+        st.table(df[:5])
 
 def main():
     '''The main function includes other functions'''
@@ -39,10 +33,6 @@ def main():
         order of columns since we have limitation on extracting API data."""
                 )
     st.sidebar.header("2 - Merge CSV Files")
-    st.write(
-        """This program is mainly to merge multiple csv files with same columns and 
-    order of columns since we have limitation on extracting API data."""
-    )
     uploaded_files = upload() # uploaded_files will be a list 
     if uploaded_files is not None:
         show_uploads(uploaded_files)
