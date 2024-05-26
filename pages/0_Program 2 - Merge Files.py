@@ -78,9 +78,9 @@ def main():
     file_handler = FileHandler()
 
     # Call methods to upload and process files
-    list_of_dfs = file_handler.upload_files()
+    file_handler.upload_files()
+    list_of_dfs = file_handler.process_files()
     if list_of_dfs:
-        file_handler.process_files()
         if file_handler.has_basic_cols(list_of_dfs):
             st.success("All DataFrames contain basic columns.")
         else:
