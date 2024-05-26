@@ -44,7 +44,7 @@ class FileHandler:
             except FileNotFoundError:
                 st.error("File not found. Please make sure you uploaded the correct files.")
     
-    def has_basic_cols(self, list_of_dfs):
+    def de_has_basic_cols(self, list_of_dfs):
         '''To check if the files have basic columns.'''
         for df_i in list_of_dfs: # enumerate adds a counter to an iterable object (like a list, tuple, or string) and returns it as an enumerate object. 
             cols = df_i.columns.tolist()
@@ -54,6 +54,15 @@ class FileHandler:
                             f'with {BASIC_COLS} columns. Please delete the file and reupload.')
                     #return False
         print('done')   
+
+    def has_basic_cols(self, list_of_dfs):
+        '''Check if all DataFrames in the list contain the basic columns.'''
+        for i, df in enumerate(list_of_dfs, 1):
+            missing_cols = [col for col in BASIC_COLS if col not in df.columns]
+            if missing_cols:
+                st.warning(f"DataFrame {i} is missing basic columns: {', '.join(missing_cols)}")
+                return False
+        return True
 
 
 def main():
