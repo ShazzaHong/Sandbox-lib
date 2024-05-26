@@ -94,11 +94,7 @@ def main():
     # Call methods to upload and process files
     file_handler.upload_files()
     list_of_dfs = file_handler.process_files()
-    if list_of_dfs:
-        if file_handler.get_headers():
-            st.success("All DataFrames contain basic columns.")
-        else:
-            st.error("Some DataFrames are missing basic columns.")
+    file_handler.get_headers()
 
 if __name__ == "__main__":
     main()
