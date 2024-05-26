@@ -10,6 +10,7 @@
 
 import pandas as pd
 import streamlit as st
+import io
 
 
 BASIC_COL_SET = set(['siteid', 'sitename', 'datacreationdate', 'aqi', 'status'])
@@ -28,8 +29,10 @@ class FileHandler:
         for uploaded_file in self.uploaded_files:
             try:
                 # Attempt to read the uploaded file
-                file_contents = uploaded_file.read()
-                st.write("File contents:", file_contents)
+                file_contents = uploaded_file.read().decode("utf-8")
+                df = pd.read_csv(io.StringIO(file_contents))
+                st.write("DataFrame from uploaded file:")
+                st.write(df[:5])
             except FileNotFoundError:
                 st.error("File not found. Please make sure you uploaded the correct files.")
 
@@ -48,7 +51,6 @@ def main():
     # Call methods to upload and process files
     file_handler.upload_files()
     file_handler.process_files()
-    
         
 
 if __name__ == "__main__":
