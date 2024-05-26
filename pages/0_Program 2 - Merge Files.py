@@ -13,7 +13,7 @@ import streamlit as st
 import io
 
 
-BASIC_COL_SET = set(['siteid', 'sitename', 'datacreationdate', 'aqi', 'status'])
+BASIC_COLS = ['siteid', 'sitename', 'datacreationdate', 'aqi', 'status']
 
 
 class FileHandler:
@@ -28,29 +28,30 @@ class FileHandler:
         self.uploaded_files = st.file_uploader("Upload files", accept_multiple_files = True)
         for uploaded_file in self.uploaded_files:
             uploaded_filenames.append(uploaded_file.name)
-        return uploaded_filenames
+        # return uploaded_filenames
 
     def process_files(self):
         '''To read the file and convert it to pandas dataframe if no error found.'''
-        dfs = []
+        list_of_dfs = []
         for uploaded_file in self.uploaded_files:
             try:
                 file_contents = uploaded_file.read().decode("utf-8")
                 df = pd.read_csv(io.StringIO(file_contents))
-                dfs = dfs.append(df)
+                list_of_dfs = list_of_dfs.append(df)
                 st.write(f"DataFrame from uploaded file - {uploaded_file.name}:")
                 st.write(df[:2])
-                return dfs
+                return list_of_dfs
             except FileNotFoundError:
                 st.error("File not found. Please make sure you uploaded the correct files.")
     
-    def has_basic_cols(self, dfs, uploaded_filenames):
+    def has_basic_cols(self, list_of_dfs):
         '''To check if the files have basic columns.'''
-        for df in dfs:
-            for col in df[0]:
-                if col not in BASIC_COL_SET:
+        for i, df in enumerate(list_of_dfs, 1): # enumerate adds a counter to an iterable object (like a list, tuple, or string) and returns it as an enumerate object. 
+            cols = df.columns.tolist()
+            for bcs in BASIC_COLS:
+                if bcs not in set(cols):
                     st.write(f'Missing basic columns. This program only merges files '
-                            f'with {BASIC_COL_SET} columns. Please delete the file and reupload.')
+                            f'with {BASIC_COLS} columns. Please delete the file and reupload.')
                     #return False
         print('done')   
 
@@ -67,9 +68,9 @@ def main():
     file_handler = FileHandler()
 
     # Call methods to upload and process files
-    uploaded_filenames = file_handler.upload_files()
+    file_handler.upload_files()
     dfs = file_handler.process_files()
-    file_handler.has_basic_cols(dfs, uploaded_filenames)
+    file_handler.has_basic_cols(dfs)
 
 if __name__ == "__main__":
     main()
