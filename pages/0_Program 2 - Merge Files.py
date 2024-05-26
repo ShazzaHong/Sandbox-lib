@@ -44,7 +44,19 @@ class FileHandler:
                 return list_of_dfs
             except FileNotFoundError:
                 st.error("File not found. Please make sure you uploaded the correct files.")
-    
+
+    def get_headers(self):
+        '''To extract the column names (headers) of csv files and store in a dictionary.'''
+        dict_of_headers = {}
+        for uploaded_file in self.uploaded_files:
+            uploaded_file.name
+            file_contents = uploaded_file.read().decode("utf-8")
+            df = pd.read_csv(io.StringIO(file_contents))
+            col_list = df.columns.tolist()
+            dict_of_headers[uploaded_file.name] = col_list
+        return dict_of_headers
+
+
     def de_has_basic_cols(self, list_of_dfs):
         '''To check if the files have basic columns.'''
         for df_i in list_of_dfs: # enumerate adds a counter to an iterable object (like a list, tuple, or string) and returns it as an enumerate object. 
@@ -70,9 +82,11 @@ def main():
     '''The main function includes other functions'''
     st.write("# Merge CSV Files")
     st.markdown(
-        """This program is mainly to merge multiple csv files with same columns and 
-        order of columns since we have limitation on extracting API data."""
-                )
+        """This program is mainly to (outer join) merge multiple csv files with basic columns 
+        ('siteid', 'sitename', 'datacreationdate', 'aqi', 'status'). The merged file allows 
+        user to plot longer time series (charts).
+        """
+        )
     
     # Create an instance of FileHandler
     file_handler = FileHandler()
@@ -81,7 +95,7 @@ def main():
     file_handler.upload_files()
     list_of_dfs = file_handler.process_files()
     if list_of_dfs:
-        if file_handler.has_basic_cols(list_of_dfs):
+        if file_handler.get_headers():
             st.success("All DataFrames contain basic columns.")
         else:
             st.error("Some DataFrames are missing basic columns.")
