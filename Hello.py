@@ -26,7 +26,7 @@ import streamlit as st
 API_KEY = "273a432a-4c0f-4cad-b1cb-304a90bdc6a1"
 API_URL_HEAD = "https://data.moenv.gov.tw/api/v2/aqx_p_488?language=en&offset=0&limit=1000&api_key="
 SUCCESS_MSG = "Successfully downloaded. Please check your folder with the file ends with '_aqi_data.csv' "
-
+LIST_SENSORS = ['pm2.5', 'so2', 'o3', 'co', 'pm10', 'no2', 'no']
 
 def call_api():
     '''To check the connection of API'''
@@ -87,7 +87,7 @@ def combine_lists(selected_lst):
 
 def load_data(cols_list, start_str, end_str):
     '''Filter attributes and load data to the empty data frame.'''
-    st.write(f"Loading data from {start_str} to {end_str}...Preview:")
+    data_load_state = st.text(f"Loading data from {start_str} to {end_str}...Preview:")
     # make API call to the Air quality index (AQI)(historical data)
     limit_data = requests.get(API_URL_HEAD + API_KEY
                             + '&filters=datacreationdate,GR,' + start_str + ':00'
@@ -102,25 +102,38 @@ def load_data(cols_list, start_str, end_str):
         rows.append(filtered_dict)
     df_records = pd.DataFrame(rows)
     st.table(df_records[:2])
-    return df_records
+    return df_records, data_load_state
     
 
-def download_file(df_records, start_str, end_str):
-    '''The function will be actived after use click Download button'''
-    # Change the format of time so the filename can be shorter
+def download_file(df_records, start_str, end_str, data_load_state):
+    '''The function will be actived after use click Download button. 
+    First, change the format of time so the filename can be shorter. 
+    Secondly, save as a csv file with start and end DateTime. 
+    The success message will replace the original loading message.
+    '''
     start_str, end_str = start_str.strip(':00'), end_str.strip(':00')
-    # save as a csv file with start and end DateTime
-    csv = df_records.to_csv(index=False)
+    csv = df_records.to_csv(index = False)
     st.download_button(
         label = "Download CSV",
         data = csv,
         file_name = f'{start_str}_to_{end_str}_aqi_data.csv'
         )
     if st.download_button:
-        st.write(SUCCESS_MSG)
+        data_load_state.text(SUCCESS_MSG)
+
+
+def preview_chart(df_records):
+    '''To preview the plotting function provided and hint users that there is another page 
+    they can use to print different kinds of chart.'''
 
 
 def main():
+    '''
+    This main function shows the page setting on Streamlit first, then call api, check 
+    available time range, let user select the range (step 1) and sensors/pollutants (step 2).
+    Lastly, load the data to an empty pandas DataFrame and save as a CSV file for user to 
+    download. 
+    '''
     st.set_page_config(
         page_title="Data Download Centre☁",
         page_icon="☁",
@@ -144,16 +157,18 @@ def main():
     start_str = start_date_time(time_list)
     if start_str:
         end_str = end_date_time(start_str, time_list)
-    lst_sensorid = ['pm2.5', 'so2', 'o3', 'co', 'pm10', 'no2', 'no']
+
     st.subheader('Step 2. Select Sensor(s)/Pollutant(s)') 
     selected_lst = st.multiselect("Please select at least one. For tutor, please select more than 3.",
-                             lst_sensorid, [lst_sensorid[0]]) 
+                             LIST_SENSORS, [LIST_SENSORS[0]]) 
     if len(selected_lst) >= 1 and st.button("Download"):
         cols_list = combine_lists(selected_lst)
-        df_records = load_data(cols_list, start_str, end_str)
-        download_file(df_records, start_str, end_str)
+        df_records, data_load_state = load_data(cols_list, start_str, end_str)
+        download_file(df_records, start_str, end_str, data_load_state)
     elif len(selected_lst) < 1:
         st.warning('Download button will only be shown when there are more than one sensor/pollutant selected.', icon="⚠️")
+    preview_chart(df_records)
+
 
 if __name__ == "__main__":
     main()
