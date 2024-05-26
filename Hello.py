@@ -170,10 +170,11 @@ def main():
     if len(selected_lst) >= 1 and st.button("Download"):
         cols_list = combine_lists(selected_lst)
         df_records, data_load_state = load_data(cols_list, start_str, end_str)
+        preview_df(df_records)
         download_file(df_records, start_str, end_str, data_load_state)
     elif len(selected_lst) < 1:
         st.warning('Download button will only be shown when there are more than one sensor/pollutant selected.', icon="⚠️")
-    preview_df(df_records)
+    
     #preview_chart(df_records)
 
 
