@@ -11,6 +11,10 @@
 import pandas as pd
 import streamlit as st
 
+
+BASIC_COL_SET = set(['siteid', 'sitename', 'datacreationdate', 'aqi', 'status'])
+
+
 def upload():
     '''To let users upload the files they want to merge'''
     uploaded_files = st.file_uploader("Choose CSV file(s) you want to merge", 
@@ -20,13 +24,12 @@ def upload():
 
 def has_basic_cols(uploaded_files):
     '''To check if the files have basic columns'''
-    basic_cols_set = set(['siteid', 'sitename', 'datacreationdate', 'aqi', 'status'])
     for file in uploaded_files:
         df = pd.read_csv(file.name)
         for col in df[0]:
-            if col not in basic_cols_set:
+            if col not in BASIC_COL_SET:
                 st.write(f'{file} is missing basic columns. This program only merges files '
-                         f'with {basic_cols_set} columns. Please delete the file and reupload.')
+                         f'with {BASIC_COL_SET} columns. Please delete the file and reupload.')
                 #return False
     print('done')   
     
@@ -41,10 +44,10 @@ def preview_uploads(uploaded_files):
             dfs.append(df)
     for num in range(len(uploaded_files)):
         st.write(f'Preview {num + 1}:')
-        st.table(dfs[num][:1])
+        st.dataframe(dfs[num][:1])
 
 
-def merge_files(file_list): #Ask tutor about RuntimeWarning
+def merge_files(file_list, basic_cols_set): #Ask tutor about RuntimeWarning
     '''merging the files'''
     # Initialize merged_df with the first DataFrame
     merged_df = pd.read_csv(file_list[0])
@@ -53,7 +56,7 @@ def merge_files(file_list): #Ask tutor about RuntimeWarning
     for file in file_list[1:]:
         df = pd.read_csv(file)
         # Perform an outer join on the common columns
-        merged_df = pd.merge(merged_df, df, on = COMMON_COLS, how = 'outer')
+        merged_df = pd.merge(merged_df, df, on = BASIC_COL_SET, how = 'outer')
     return merged_df
 
 
@@ -64,7 +67,7 @@ def main():
         """This program is mainly to merge multiple csv files with same columns and 
         order of columns since we have limitation on extracting API data."""
                 )
-    st.sidebar.header("2 - Merge CSV Files")
+    
     uploaded_files = upload() # uploaded_files will be a list 
     if uploaded_files is not None:
         has_basic_cols(uploaded_files)

@@ -118,7 +118,7 @@ def download_file(df_records, start_str, end_str, data_load_state):
         file_name = f'{start_str}_to_{end_str}_aqi_data.csv'
         )
     if st.download_button:
-        data_load_state.text(SUCCESS_MSG)
+        data_load_state.write(SUCCESS_MSG)
 
 
 def preview_df(df_records):
