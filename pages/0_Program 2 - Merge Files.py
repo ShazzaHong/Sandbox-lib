@@ -27,7 +27,7 @@ def has_basic_cols(uploaded_files):
             if col not in basic_cols_set:
                 st.write(f'{file} is missing basic columns. This program only merges files '
                          f'with {basic_cols_set} columns. Please delete the file and reupload.')
-                return False
+                #return False
     print('done')   
     
 
@@ -68,7 +68,7 @@ def main():
     uploaded_files = upload() # uploaded_files will be a list 
     if uploaded_files is not None:
         preview_uploads(uploaded_files)
-
+        has_basic_cols(uploaded_files)
 
 if __name__ == "__main__":
     main()
