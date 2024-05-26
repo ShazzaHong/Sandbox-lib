@@ -118,7 +118,7 @@ def download_file(df_records, start_str, end_str, data_load_state):
         file_name = f'{start_str}_to_{end_str}_aqi_data.csv'
         )
     if st.download_button:
-        data_load_state.write(SUCCESS_MSG)
+        data_load_state.text(SUCCESS_MSG)
 
 
 def preview_df(df_records):
@@ -130,7 +130,14 @@ def preview_df(df_records):
 def preview_chart(df_records):
     '''To preview the plotting function provided and hint users that there is another page 
     they can use to print different kinds of chart.'''
+    st.write('Preview chart:')
     st.line_chart(df_records, x = "datacreationdate", y = df_records[0][5:])
+    st.markdown(
+        """
+        **👈 Select Program 3 from the sidebar to see more charts** 
+        (Please ignore the demo pages)
+        """
+    )
 
 
 def main():
@@ -175,12 +182,7 @@ def main():
         st.warning('Download button will only be shown when there are more than one '
                    'sensor/pollutant selected.', icon="⚠️")
     preview_chart(df_records)
-    st.markdown(
-        """
-        **👈 Select Program 3 from the sidebar to see more charts** 
-        (Please ignore the demo pages)
-        """
-    )
+    
 
 if __name__ == "__main__":
     main()
