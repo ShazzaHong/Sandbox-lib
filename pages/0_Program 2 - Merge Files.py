@@ -46,8 +46,7 @@ class FileHandler:
     
     def has_basic_cols(self, list_of_dfs):
         '''To check if the files have basic columns.'''
-        for i, df in enumerate(list_of_dfs, 0): # enumerate adds a counter to an iterable object (like a list, tuple, or string) and returns it as an enumerate object. 
-            st.text(f"Data Frame {i}:")
+        for df in list_of_dfs: # enumerate adds a counter to an iterable object (like a list, tuple, or string) and returns it as an enumerate object. 
             cols = df.columns.tolist()
             for bcs in BASIC_COLS:
                 if bcs not in set(cols):
