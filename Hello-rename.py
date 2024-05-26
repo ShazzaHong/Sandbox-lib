@@ -115,7 +115,8 @@ def download_file(df_records, start_str, end_str):
         data = csv,
         file_name = f'{start_str}_to_{end_str}_aqi_data.csv'
         )
-    st.write(SUCCESS_MSG)
+    if st.download_button:
+        st.write(SUCCESS_MSG)
 
 
 def main():
