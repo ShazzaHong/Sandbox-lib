@@ -22,7 +22,7 @@ def has_basic_cols(uploaded_files):
     '''To check if the files have basic columns'''
     basic_cols_set = set(['siteid', 'sitename', 'datacreationdate', 'aqi', 'status'])
     for file in uploaded_files:
-        df = pd.read_csv(file)
+        df = pd.read_csv(file.name)
         for col in df[0]:
             if col not in basic_cols_set:
                 st.write(f'{file} is missing basic columns. This program only merges files '
@@ -41,7 +41,7 @@ def preview_uploads(uploaded_files):
             dfs.append(df)
     for num in range(len(uploaded_files)):
         st.write(f'Preview {num + 1}:')
-        st.table(dfs[num][:2])
+        st.table(dfs[num][:1])
 
 
 def merge_files(file_list): #Ask tutor about RuntimeWarning
@@ -67,8 +67,9 @@ def main():
     st.sidebar.header("2 - Merge CSV Files")
     uploaded_files = upload() # uploaded_files will be a list 
     if uploaded_files is not None:
-        preview_uploads(uploaded_files)
         has_basic_cols(uploaded_files)
+        preview_uploads(uploaded_files)
+        
 
 if __name__ == "__main__":
     main()
