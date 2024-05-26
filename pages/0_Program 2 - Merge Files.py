@@ -20,7 +20,6 @@ for uploaded_file in uploaded_files:
     st.write("filename:", uploaded_file.name)
     st.write(bytes_data)
 
-st.set_page_config(page_title="Merge CSV Files", page_icon="📹")
 st.markdown("# Merge CSV Files")
 st.sidebar.header("2 - Merge CSV Files")
 st.write(
