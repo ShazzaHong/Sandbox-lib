@@ -12,7 +12,7 @@
 """
 
 # Install and use method:
-# 001 In your terminal, enter: python3 -m pip install streamlit
+# 001 In your terminal or command prompt, enter: python3 -m pip install streamlit
 # 002 Then: streamlit run Program 1 - Download Data (Streamlit).py （mind the path!）
 # 003 Browse Local URL: http://localhost:8501
 # 004 Follow the instruction on the webpage: Filter time, select pollutant(s), 
@@ -115,7 +115,8 @@ def download_file(df_records, start_str, end_str):
         data = csv,
         file_name = f'{start_str}_to_{end_str}_aqi_data.csv'
         )
-    st.write(SUCCESS_MSG)
+    if st.download_button:
+        st.write(SUCCESS_MSG)
 
 
 def main():
