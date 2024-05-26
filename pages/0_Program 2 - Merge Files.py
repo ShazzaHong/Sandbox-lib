@@ -21,9 +21,8 @@ def show_uploads(uploaded_files):
     '''To show the preview of the files'''
     if uploaded_files:
         dfs = []  # List to store DataFrames read from uploaded files
-        file_name = []
         for file in uploaded_files:
-            file_name = file_name.append(file.name)
+            # file_name = file_name.append(file.name)
             df = pd.read_csv(file)
             dfs.append(df)
     for num in range(len(uploaded_files)):
