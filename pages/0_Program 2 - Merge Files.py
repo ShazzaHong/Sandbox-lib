@@ -39,14 +39,16 @@ class FileHandler:
         for uploaded_file in self.uploaded_files:
             try:
                 file_contents = uploaded_file.read().decode("utf-8")
-                df = pd.read_csv(io.StringIO(file_contents))
-                list_of_dfs = list_of_dfs.append(df)
-                col_list = df.columns.tolist()
-                dict_of_headers[uploaded_file.name] = col_list
-                st.write(f"DataFrame from uploaded file - {uploaded_file.name}:")
-                st.write(df[:2])
-                st.write(type(list_of_dfs))
-                return list_of_dfs, dict_of_headers
+                st.write("File contents:", file_contents)
+                if file_contents:
+                    df = pd.read_csv(io.StringIO(file_contents))
+                    list_of_dfs = list_of_dfs.append(df)
+                    col_list = df.columns.tolist()
+                    dict_of_headers[uploaded_file.name] = col_list
+                    st.write(f"DataFrame from uploaded file - {uploaded_file.name}:")
+                    st.write(df[:2])
+                    st.write(type(list_of_dfs))
+                    return list_of_dfs, dict_of_headers
             except FileNotFoundError:
                 st.error("File not found. Please make sure you uploaded the correct files.")
 
