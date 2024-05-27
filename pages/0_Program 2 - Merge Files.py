@@ -24,10 +24,16 @@ class FileHandler:
 
     def upload_files(self):
         '''Upload files'''
+        uploaded_files = []
         uploaded_filenames = []
         self.uploaded_files = st.file_uploader("Upload files", accept_multiple_files = True)
-        for uploaded_file in self.uploaded_files:
-            uploaded_filenames.append(uploaded_file.name)
+        if self.uploaded_files is not None:
+            # Append the uploaded file to the list of uploaded files
+            uploaded_files.append(uploaded_file)
+        for i, file in enumerate(self.uploaded_files):
+            delete_checkbox = st.checkbox(f"Delete {file.name}")
+            if delete_checkbox:
+                uploaded_files.remove(file)
         return uploaded_filenames # delete if not using
 
     def process_files(self):
