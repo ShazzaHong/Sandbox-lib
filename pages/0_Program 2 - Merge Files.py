@@ -29,7 +29,7 @@ class FileHandler:
         self.uploaded_files = st.file_uploader("Upload files", accept_multiple_files = True)
         if self.uploaded_files is not None:
             # Append the uploaded file to the list of uploaded files
-            uploaded_files.append(uploaded_file)
+            uploaded_files.append(self.uploaded_files)
         for i, file in enumerate(self.uploaded_files):
             delete_checkbox = st.checkbox(f"Delete {file.name}")
             if delete_checkbox:
