@@ -39,8 +39,7 @@ class FileHandler:
         for uploaded_file in self.uploaded_files:
             try:
                 file_contents = uploaded_file.read().decode("utf-8")
-                st.write("File contents:", file_contents)
-                if file_contents:
+                if len(file_contents) > 0:
                     df = pd.read_csv(io.StringIO(file_contents))
                     list_of_dfs = list_of_dfs.append(df)
                     col_list = df.columns.tolist()
