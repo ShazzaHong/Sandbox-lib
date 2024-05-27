@@ -91,7 +91,8 @@ def main():
     
     if file_handler.process_files():
         list_of_dfs, dict_of_headers = file_handler.process_files()
-        print('success')
+    
+    print('success')
 
 
 if __name__ == "__main__":
