@@ -125,8 +125,7 @@ def preview_chart(df_records, selected_lst):
     they can use to print different kinds of chart.'''
     st.markdown(
         """
-        **👈 Select Program 3 from the sidebar to see more charts** 
-        (Please ignore the demo pages)
+        **Now run Program 2 or 3 offline with the file you downloaded.
         """
     )
     st.write(f'Preview chart - {selected_lst[0]} level at site 1 (Keelung):')
@@ -155,7 +154,7 @@ def main():
         Here you can download the up-to-date air quality data from 
         Ministry for the Environment, ROC (Taiwan).
         
-        **👈 Select other functions from the sidebar** (Please ignore the demo pages)
+        **Please ignore the demo pages in the sidebar.
         ### Program 1 - Download data"""
     )
     
