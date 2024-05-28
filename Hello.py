@@ -125,20 +125,23 @@ def download_file(df_records, start_str, end_str, data_load_state):
 
 
 def preview_chart(df_records, selected_lst):
-    '''To preview the plotting function provided and hint users that there is another page 
-    they can use to print different kinds of chart.'''
+    '''To preview the plotting function provided and hint users that there are other
+     programs available to use.'''
     st.markdown(
         """
         **Now run Program 2 or 3 offline with the python file I uploaded to LEARN or download 
-        from [here](%s)" % https://github.com/ShazzaHong/Sandbox-lib
+        from https://github.com/ShazzaHong/Sandbox-lib
         """
     )
-    st.write(f'Preview chart - {selected_lst[0]} level at site 1 (Keelung):')
+    st.write(f'Preview chart - {selected_lst} level at site 1 (Keelung):')
     condition = df_records['siteid'] == '1'
     filtered_df = df_records[condition] # Apply the filter to the DataFrame
-    st.scatter_chart(filtered_df, x = 'datacreationdate', y = selected_lst[0])
+    st.scatter_chart(filtered_df, x = 'datacreationdate', y = selected_lst)
 
-
+    #st.line_chart(filtered_df, x = 'datacreationdate', y = selected_lst[0], color=None, width=None, height=None, use_container_width=True)
+    
+    #chart_data = pd.DataFrame(np.random.randn(20, 3), columns=["a", "b", "c"])
+    #st.line_chart(chart_data)   
 def main():
     '''
     This main function shows the page setting on Streamlit first, then call api, check 
