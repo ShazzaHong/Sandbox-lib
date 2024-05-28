@@ -20,13 +20,15 @@
 
 import requests
 import pandas as pd
-from datetime import datetime 
+from datetime import datetime, timedelta
 import streamlit as st
 import matplotlib.pyplot as plt
+
 
 API_KEY = "273a432a-4c0f-4cad-b1cb-304a90bdc6a1"
 API_URL_HEAD = "https://data.moenv.gov.tw/api/v2/aqx_p_488?language=en&offset=0&limit=1000&api_key="
 # SUCCESS_MSG = "Successfully downloaded.\nPlease check your folder with the file ends with '_aqi_data.csv' "
+DATETIME_FORMAT = "%Y-%m-%d %H:%M"
 LIST_SENSORS = ['pm2.5', 'so2', 'o3', 'co', 'pm10', 'no2', 'no']
 
 def call_api():
@@ -70,8 +72,8 @@ def end_date_time(start_str, time_list):
     The end time should be at least one hour after start time.'''
     update_time_list = []
     for time in time_list:
-        if datetime.strptime(time, "%Y-%m-%d %H:%M") > datetime.strptime(start_str, 
-                                                                        "%Y-%m-%d %H:%M"):
+        if datetime.strptime(time, DATETIME_FORMAT) > datetime.strptime(start_str, 
+                                                                        DATETIME_FORMAT):
             update_time_list.append(time)
     selected_time = st.selectbox(f"End datetime:", update_time_list)
     return selected_time
@@ -91,6 +93,9 @@ def load_data(cols_list, start_str, end_str):
     (For) Loop through the data, extract specific columns, and append them to the DataFrame.
     Append the filtered dictionary to the list of rows. '''
     data_load_state = st.text(f"Loading data from {start_str} to {end_str}...")
+    start_datetime = datetime.strptime(start_str, DATETIME_FORMAT)
+    # Minus one hour to the start_datetime, otherwise it won't include the start time
+    new_start_datetime = str(start_datetime - timedelta(hours = 1))
     limit_data = requests.get(API_URL_HEAD + API_KEY
                             + '&filters=datacreationdate,GR,' + start_str + ':00'
                             + '|datacreationdate,LE,' + end_str + ':00').json()
