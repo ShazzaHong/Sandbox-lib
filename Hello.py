@@ -96,6 +96,7 @@ def load_data(cols_list, start_str, end_str):
     start_datetime = datetime.strptime(start_str, DATETIME_FORMAT)
     # Minus one hour to the start_datetime, otherwise it won't include the start time
     new_start_datetime = str(start_datetime - timedelta(hours = 1))
+    st.write(new_start_datetime)
     limit_data = requests.get(API_URL_HEAD + API_KEY
                             + '&filters=datacreationdate,GR,' + start_str + ':00'
                             + '|datacreationdate,LE,' + end_str + ':00').json()
