@@ -136,12 +136,9 @@ def preview_chart(df_records, selected_lst):
     st.write(f'Preview chart - {selected_lst} level at site 1 (Keelung):')
     condition = df_records['siteid'] == '1'
     filtered_df = df_records[condition] # Apply the filter to the DataFrame
-    st.scatter_chart(filtered_df, x = 'datacreationdate', y = selected_lst)
+    st.line_chart(filtered_df, x = 'datacreationdate', y = selected_lst)
 
-    #st.line_chart(filtered_df, x = 'datacreationdate', y = selected_lst[0], color=None, width=None, height=None, use_container_width=True)
-    
-    #chart_data = pd.DataFrame(np.random.randn(20, 3), columns=["a", "b", "c"])
-    #st.line_chart(chart_data)   
+  
 def main():
     '''
     This main function shows the page setting on Streamlit first, then call api, check 
