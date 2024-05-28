@@ -27,12 +27,11 @@ import matplotlib.pyplot as plt
 
 API_KEY = "273a432a-4c0f-4cad-b1cb-304a90bdc6a1"
 API_URL_HEAD = "https://data.moenv.gov.tw/api/v2/aqx_p_488?language=en&offset=0&limit=1000&api_key="
-# SUCCESS_MSG = "Successfully downloaded.\nPlease check your folder with the file ends with '_aqi_data.csv' "
 DATETIME_FORMAT = "%Y-%m-%d %H:%M"
 LIST_SENSORS = ['pm2.5', 'so2', 'o3', 'co', 'pm10', 'no2', 'no']
 
 def call_api():
-    '''To check the connection of API'''
+    '''To check the connection of API.'''
     response = requests.get(API_URL_HEAD + API_KEY)
     if response.status_code == 200:
         aqi_all = response.json()
@@ -96,7 +95,6 @@ def load_data(cols_list, start_str, end_str):
     start_datetime = datetime.strptime(start_str, DATETIME_FORMAT)
     # Minus one hour to the start_datetime, otherwise it won't include the start time
     new_start_datetime = str(start_datetime - timedelta(hours = 1))
-    st.write(new_start_datetime)
     limit_data = requests.get(API_URL_HEAD + API_KEY
                             + '&filters=datacreationdate,GR,' + new_start_datetime
                             + '|datacreationdate,LE,' + end_str + ':00').json()
