@@ -129,7 +129,8 @@ def preview_chart(df_records, selected_lst):
     they can use to print different kinds of chart.'''
     st.markdown(
         """
-        **Now run Program 2 or 3 offline with the python file I uploaded to LEARN.
+        **Now run Program 2 or 3 offline with the python file I uploaded to LEARN or download 
+        from [here](%s)" % https://github.com/ShazzaHong/Sandbox-lib
         """
     )
     st.write(f'Preview chart - {selected_lst[0]} level at site 1 (Keelung):')
@@ -182,7 +183,6 @@ def main():
     elif len(selected_lst) < 1:
         st.warning('Download button will only be shown when there are more than one '
                    'sensor/pollutant selected.', icon="⚠️")
-    
     
 
 if __name__ == "__main__":
