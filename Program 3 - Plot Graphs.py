@@ -1,10 +1,10 @@
 """This is for the COSC480-24S1 project
    Project Name: Data Download Centre 
-   Date: 2024-05-26
+   Date: 2024-05-29
    Developer: Shuan Hong
    Program 3: Plot Graphs with Class
    Purpose: This program is mainly to plot the charts by using the AQI file 
-            users downloaded/merged
+            users downloaded/merged.
 """
 
 import os # os.path.exists() is used to check whether a file or directory exists at a given path.
@@ -20,16 +20,16 @@ class AQIDataAnalyzer:
 
     def check_columns(self, filename):
         '''Check if the necessary columns exist.'''
-        df = pd.read_csv(filename, nrows=1)
+        df = pd.read_csv(filename, nrows = 1)
         columns = df.columns.tolist()
         missing_columns = [col for col in self.basic_columns if col not in columns]
         if missing_columns:
             print("Your file is missing necessary column(s) for plotting. \n"
                       f"Necessary columns are {self.basic_columns} \n"
                       f"and you missed {missing_columns}. \n"
-                      "Please check the column name(s).")
+                      "Please check the column name(s) or the existence.")
         else:
-            return True, columns
+            return True
 
     def ask_file(self):
         '''Ask users to enter the file names they want to plot and check if 
@@ -45,9 +45,9 @@ class AQIDataAnalyzer:
             if not os.path.exists(filename):
                 print(f"Error: File '{filename}' does not exist in the current directory.")
                 continue
-            is_valid, columns = self.check_columns(filename)
-            if self.check_columns(filename):
-                return filename, columns   
+            is_valid = self.check_columns(filename)
+            if is_valid:
+                return filename 
                 
     def need_filter(self):
         '''Asking if user need filter. If not, then it will plot the default 
@@ -56,7 +56,7 @@ class AQIDataAnalyzer:
               " setting which is the the hourly AQI in site 1 - Keelung?", end = ' ') 
         is_done = False 
         while True:
-            answer = input(f"Enter Y to choose filter, N to use default setting: ")
+            answer = input(f"Enter Y to choose filter, N to use default setting: ").upper()
             if answer not in ['Y', 'N']:
                 print("Only Y or N allowed!!", end = ' ')
             else:
@@ -79,7 +79,7 @@ class AQIDataAnalyzer:
         print(f"Available site ids in the file: {available_ids}")
         is_valid = False
         while not is_valid:
-            siteid = input("Please enter one site id listed above: ")
+            siteid = input("[Filter 1] Please enter one site id listed above: ")
             if siteid.isdigit():
                 siteid = int(siteid)
                 if siteid in set(available_ids):
@@ -99,7 +99,7 @@ class AQIDataAnalyzer:
         intersection_set.add('all')
         is_valid = False
         while not is_valid:
-            pollutant = input(f"Please enter one pollutant among {intersection_set} "
+            pollutant = input(f"[Filter 2] Please enter one pollutant among {intersection_set} "
                               "('all' means plot all pollutants): ")
             if pollutant.lower() in intersection_set:
                 is_valid = True 
@@ -204,12 +204,13 @@ def continue_plot():
             print("Invalid value. Please enter either c or q to continue or quit: ")    
 
 
-def set_filter(analyzer, df, columns):
+def set_filter(analyzer, df):
     '''If user want filter, then this functino will ask them the setting of the 
     filter. There are two filter: site id and pollutant. Because there is 
     full-width left parenthesis character in the file (sitename column) and 
     that is not available in the default font Matplotlib configurate. 
     I added 'Heiti TC' font to ensure that the warning no longer appears.'''
+    columns = df.columns.tolist()
     plotter = Plot(df)
     plt.rcParams['font.family'] = 'Heiti TC'
     while True:
@@ -231,10 +232,10 @@ def main():
     '''To let user choose file and filters to plot the chart. Depends on their 
     setting, differnt kind of charts will be generated.'''
     analyzer = AQIDataAnalyzer()
-    filename, columns = analyzer.ask_file()
+    filename = analyzer.ask_file()
     df = pd.read_csv(filename)
     df['datacreationdate'] = pd.to_datetime(df['datacreationdate']) # Convert 'datacreationdate' column to datetime type
-    set_filter(analyzer, df, columns)
+    set_filter(analyzer, df)
 
 
 main() # 2024-05-26 21_to_2024-05-27 08_aqi_data.csv

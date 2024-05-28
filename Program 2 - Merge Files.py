@@ -11,14 +11,14 @@ import pandas as pd
 import os # It allows us to perform various operating system-related tasks
 
 
-# List of common columns
+# List of basic common columns
 COMMON_COLS = ['siteid', 'sitename', 'datacreationdate', 'aqi', 'status']
 
     
 def has_common_columns(filename):
     '''
-    Compare the columns and order of columns between CSV files.
-    Returns: True if the files have the same columns and order, False otherwise.
+    Compare the columns between CSV files.
+    Returns True if the files have the basic commmon columns, False otherwise.
     '''
     df = pd.read_csv(filename, nrows = 1)
     columns = df.columns.tolist() # confirm if tolist() is to convert object to list data type
@@ -84,7 +84,7 @@ def merge_files(file_list):
 
 def name_file(sorted_merged_df):
     '''
-    Let user name the file with .csv extention and remind them the naming.
+    Let user name the file with .csv extension and remind them the naming.
     Write the result to a new CSV file by using to_csv() method in pandas library.
     '''
     done = False
@@ -97,13 +97,13 @@ def name_file(sorted_merged_df):
             print("Complete!")
             done = True
         else:
-            print("Wrong naming! Your file name has to include .csv")
+            print("Wrong naming! Your file name has to include .csv extension.")
         
     
 def main():
     '''let users choose the files they want to merge'''
     print('Please enter the csv file names you want to merge.\n'
-          'The files have to include the following columns and with same order:\n'
+          'The files have to include the following columns:\n'
           f'{COMMON_COLS}')
     file_list = ask_files() 
     print(f"The entered files:")

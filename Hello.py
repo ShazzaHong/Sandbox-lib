@@ -22,13 +22,13 @@ import requests
 import pandas as pd
 from datetime import datetime, timedelta
 import streamlit as st
-import matplotlib.pyplot as plt
 
 
 API_KEY = "273a432a-4c0f-4cad-b1cb-304a90bdc6a1"
 API_URL_HEAD = "https://data.moenv.gov.tw/api/v2/aqx_p_488?language=en&offset=0&limit=1000&api_key="
 DATETIME_FORMAT = "%Y-%m-%d %H:%M"
 LIST_SENSORS = ['pm2.5', 'so2', 'o3', 'co', 'pm10', 'no2', 'no']
+
 
 def call_api():
     '''To check the connection of API.'''
@@ -138,7 +138,7 @@ def preview_chart(df_records, selected_lst):
     filtered_df = df_records[condition] # Apply the filter to the DataFrame
     st.line_chart(filtered_df, x = 'datacreationdate', y = selected_lst)
 
-  
+
 def main():
     '''
     This main function shows the page setting on Streamlit first, then call api, check 
