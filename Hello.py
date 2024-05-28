@@ -98,7 +98,7 @@ def load_data(cols_list, start_str, end_str):
     new_start_datetime = str(start_datetime - timedelta(hours = 1))
     st.write(new_start_datetime)
     limit_data = requests.get(API_URL_HEAD + API_KEY
-                            + '&filters=datacreationdate,GR,' + start_str + ':00'
+                            + '&filters=datacreationdate,GR,' + new_start_datetime
                             + '|datacreationdate,LE,' + end_str + ':00').json()
     records_list = limit_data["records"] # records_list is a list of dictionaries
     rows = [] # Initialize an empty list to store DataFrame rows
