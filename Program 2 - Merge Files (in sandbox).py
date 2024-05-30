@@ -70,15 +70,19 @@ def merge_files(file_list):
     merged_df = pd.read_csv(file_list[0])
 
     for file in file_list[1:]:
-        df = pd.read_csv(file) 
-        overlap_cols = [col for col in merged_df.columns if col in df.columns 
-                        and merged_df[col].equals(df[col])] 
-        merged_df_filtered = merged_df.drop(columns = overlap_cols)
+        df = pd.read_csv(file)
+        intersection_set = set(merged_df.columns) and set(df.columns)
+        
+        #overlap_cols = [col for col in merged_df.columns if col in df.columns 
+                        #and merged_df[col].equals(df[col])] 
+        print(f"overlap_cols: ", intersection_set)
+        merged_df_filtered = merged_df.drop(columns = intersection_set)
+        print(f"merged_df_filtered: ", merged_df_filtered.columns)
         for col in COMMON_COLS:
             if col not in merged_df_filtered.columns:
                 merged_df_filtered[col] = merged_df[col]        
-
         merged_df = pd.merge(merged_df_filtered, df, on = COMMON_COLS, how = 'outer')
+        print(f"merged_df (end): ", merged_df.columns)
     return merged_df
 
 
@@ -90,7 +94,7 @@ def name_file(sorted_merged_df):
     done = False
     while not done:
         merged_filename = input("Please name the merged csv file (with .csv). "
-                                "Be careful of naming, so it won't overwrite: ")
+                                "Be careful of naming, so it won't overwrite: ").strip()
         result = merged_filename.strip().lower().endswith('.csv') # T/F
         if result:
             sorted_merged_df.to_csv(merged_filename, index = False) # need to exclude the first column (index)
@@ -114,3 +118,4 @@ def main():
 
 
 main() # test: 2024-05-28 04_to_2024-05-28 05_aqi_data.csv and 2024-05-28 04_to_2024-05-28 05_aqi_data (2).csv
+# test: 2024-05-30 16_to_2024-05-30 21_aqi_data.csv and 2024-05-30 16_to_2024-05-31 03_aqi_data.csv

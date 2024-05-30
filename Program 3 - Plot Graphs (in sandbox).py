@@ -140,7 +140,8 @@ class Plot:
         I set create a new figure with the size (width, height) in inches, 
         but users can adjust it if they know coding.'''
         filtered_df = self.df[self.df['siteid'] == siteid]
-        sitename = np.array(filtered_df)[1,1]
+        site_name = filtered_df.loc[filtered_df['siteid'] 
+                                    == siteid, 'sitename'].iloc[0]  
         sorted_filtered_df = filtered_df.sort_values(by='datacreationdate', 
                                                      ascending=True)
         plt.figure(figsize=(10, 6)) 
@@ -149,16 +150,17 @@ class Plot:
         plt.xticks(rotation=10)
         plt.xlabel('Date Time')
         plt.ylabel(f'{pollutant.upper()} (µg/m³)')
-        plt.title(f'{pollutant.upper()} level over Time at {sitename}')
+        plt.title(f'{pollutant.upper()} level over Time at {site_name}')
         plt.grid(True)
         plt.show()
 
     def plot_filtered_site_all_pollutants(self, siteid, intersection_set): 
         '''Plotting the filtered site with all pollutants available.'''
         filtered_df = self.df[self.df['siteid'] == siteid]
+        site_name = filtered_df.loc[filtered_df['siteid'] 
+                                    == siteid, 'sitename'].iloc[0]        
         sorted_filtered_df = filtered_df.sort_values(by='datacreationdate', 
                                                      ascending = True)
-        site_name = np.array(filtered_df)[1,1]
         intersection_set.remove('all')
         plt.figure(figsize=(10, 6))
         for pollutant in intersection_set:
@@ -176,7 +178,7 @@ class Plot:
     def plot_default(self):
         '''Plotting the default setting: only AQI at Keelung site. 
         Assumption: every file has site 1 data.''' 
-        filtered_df = self.df[self.df['siteid'] == 1]
+        filtered_df = self.df[self.df['siteid'] == 1]          
         sorted_filtered_df = filtered_df.sort_values(by = 'datacreationdate', 
                                                      ascending = True) 
         plt.figure(figsize=(10, 6))
@@ -238,4 +240,4 @@ def main():
     set_filter(analyzer, df)
 
 
-main() # 2024-05-26 21_to_2024-05-27 08_aqi_data.csv
+main() 
