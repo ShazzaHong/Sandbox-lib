@@ -129,8 +129,8 @@ def preview_chart(df_records, selected_lst):
      programs available to use.'''
     st.markdown(
         """
-        **Now run Program 2 or 3 offline with the python file I uploaded to LEARN or download 
-        from https://github.com/ShazzaHong/Sandbox-lib
+        **You can download program 2 to merge files and use program 3 to plot 
+        charts. Download here: https://github.com/ShazzaHong/Sandbox-lib
         """
     )
     st.write(f'Preview chart - {selected_lst} level at site 1 (Keelung):')
@@ -157,7 +157,7 @@ def main():
     st.markdown(
         """
         Here you can download the up-to-date air quality data from 
-        Ministry for the Environment, ROC (Taiwan).
+        Ministry of Environment, ROC (Taiwan).
         
         ### Program 1 - Download data"""
     )
