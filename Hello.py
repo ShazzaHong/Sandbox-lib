@@ -1,6 +1,6 @@
 """This is for the COSC480-24S1 project
    Project Name: Data Download Centre
-   Date: 2024-05-26
+   Date: 2024-05-31
    Developer: Shuan Hong
    Program 1: Download Data (through API)
    
@@ -157,7 +157,7 @@ def main():
     st.markdown(
         """
         Here you can download the up-to-date air quality data from 
-        Ministry of Environment, ROC (Taiwan).
+        Ministry of Environment, Taiwan.
         
         ### Program 1 - Download data"""
     )
