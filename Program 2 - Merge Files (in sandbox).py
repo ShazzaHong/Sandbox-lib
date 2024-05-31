@@ -1,10 +1,11 @@
 """This is for the COSC480-24S1 project
    Project Name: Data Download Centre 
-   Date: 2024-05-29
+   Date: 2024-05-31
    Developer: Shuan Hong
    Program 2: Merge Files
-   Purpose: This program is mainly to merge multiple csv files with same columns 
-   and order of columns since we have limitation on extracting API data.
+   Purpose: This program is mainly to merge/combine multiple csv files with 
+   same columns and order of columns since we have upper limit on extracting API 
+   data.
 """
 
 import pandas as pd
@@ -21,8 +22,7 @@ def has_common_columns(filename):
     Returns True if the files have the basic commmon columns, False otherwise.
     '''
     df = pd.read_csv(filename, nrows = 1)
-    columns = df.columns.tolist() # confirm if tolist() is to convert object to list data type
-    # Check if the columns match COMMON_COLS
+    columns = df.columns.tolist()
     for col in COMMON_COLS:
         if col not in set(columns):
             print(f"{filename} doesn't fit the requirement of columns. {col} missing")
@@ -31,10 +31,9 @@ def has_common_columns(filename):
             return True
     
     
-def ask_files(): # shorten it
+def ask_files():
     '''Ask users to enter the file names they want to merge and 
     check if they are retrievable.'''
-    # Initialize an empty list to store file paths
     file_list = []
     while True:
         filename = input('Enter a file name with .csv (enter q to quit and go next step): ').strip() 
@@ -58,35 +57,33 @@ def ask_files(): # shorten it
 def merge_files(file_list):
     '''
     Merging the files. 
-    First, initialize merged_df with the first DataFrame.
-    Iterate over the remaining file paths and merge each DataFrame with merged_df.
-    In order to prevent extra columns with suffixes generated while using 
-    outer join to merge data frames, we need to identify overlapping columns 
-    with the same values. equals() method in pandas is used to compare two 
-    pandas objects. Then we remove overlapping columns from one of the DataFrames 
-    while keeping basic columns (COMMON_COLS). The second for loop is to ensure 
-    basic columns are kept by adding them back to the DataFrame. 
+    First, initialize merged_df with the first DataFrame and set the COMMON_COLS
+    as index for combining data.
+    Iterate over the remaining file paths and combine each DataFrame with merged_df.
+    combine_first() is a method in Pandas DataFrame objects. It's used to combine 
+    two DataFrames, filling missing values in one DataFrame with non-missing values 
+    from another DataFrame.
+    However, since combine_first() will only combine the overlapping index, I 
+    use append to add data back (in the second for loop). I reorder the columns 
+    in the middle.
     '''
-    merged_df = pd.read_csv(file_list[0])
-
+    merged_df = pd.read_csv(file_list[0]).set_index(COMMON_COLS)
+    for file in file_list[1:]:
+        df = pd.read_csv(file).set_index(COMMON_COLS)
+        merged_df.reset_index(inplace=True) # Reset indices of both DataFrames
+        df.reset_index(inplace=True)
+        merged_df = merged_df.combine_first(df).fillna(merged_df).fillna(df)  
+    merged_df.reset_index(inplace = True)
+    new_columns_order = COMMON_COLS + [col for col in merged_df.columns if col 
+                                       not in COMMON_COLS]
+    merged_df = merged_df[new_columns_order] # Reorder
     for file in file_list[1:]:
         df = pd.read_csv(file)
-        intersection_set = set(merged_df.columns) and set(df.columns)
-        
-        #overlap_cols = [col for col in merged_df.columns if col in df.columns 
-                        #and merged_df[col].equals(df[col])] 
-        print(f"overlap_cols: ", intersection_set)
-        merged_df_filtered = merged_df.drop(columns = intersection_set)
-        print(f"merged_df_filtered: ", merged_df_filtered.columns)
-        for col in COMMON_COLS:
-            if col not in merged_df_filtered.columns:
-                merged_df_filtered[col] = merged_df[col]        
-        merged_df = pd.merge(merged_df_filtered, df, on = COMMON_COLS, how = 'outer')
-        print(f"merged_df (end): ", merged_df.columns)
-    return merged_df
+        merged_df = merged_df.append(df, ignore_index = True)
+    return merged_df    
 
 
-def name_file(sorted_merged_df):
+def name_file(merged_df):
     '''
     Let user name the file with .csv extension and remind them the naming.
     Write the result to a new CSV file by using to_csv() method in pandas library.
@@ -97,7 +94,7 @@ def name_file(sorted_merged_df):
                                 "Be careful of naming, so it won't overwrite: ").strip()
         result = merged_filename.strip().lower().endswith('.csv') # T/F
         if result:
-            sorted_merged_df.to_csv(merged_filename, index = False) # need to exclude the first column (index)
+            merged_df.to_csv(merged_filename, index = False) # need to exclude the first column (index)
             print("Complete!")
             done = True
         else:
@@ -113,9 +110,9 @@ def main():
     print(f"The entered files:")
     for file in file_list:
         print(file)    
-    merged_df = merge_files(file_list)  
+    merged_df = merge_files(file_list)
     name_file(merged_df)
 
 
-main() # test: 2024-05-28 04_to_2024-05-28 05_aqi_data.csv and 2024-05-28 04_to_2024-05-28 05_aqi_data (2).csv
-# test: 2024-05-30 16_to_2024-05-30 21_aqi_data.csv and 2024-05-30 16_to_2024-05-31 03_aqi_data.csv
+main()
+# test: 2024-05-30 18_to_2024-05-30 2_aqi_data.csv  , 2024-05-30 19_to_2024-05-31 05_aqi_data.csv  ,   2024-05-30 16_to_2024-05-30 21_aqi_data.csv

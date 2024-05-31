@@ -1,8 +1,8 @@
 """This is for the COSC480-24S1 project
    Project Name: Data Download Centre 
-   Date: 2024-05-29
+   Date: 2024-05-31
    Developer: Shuan Hong
-   Program 3: Plot Graphs with Class
+   Program 3: Plot Graphs
    Purpose: This program is mainly to plot the charts by using the AQI file 
             users downloaded/merged.
 """
@@ -38,7 +38,7 @@ class AQIDataAnalyzer:
         to the next iteration. See if it can be replaced by elif.'''
         while True:
             filename = input("Enter the file name you want to plot "
-                                 "(with .csv and in the same folder): ").strip()
+                             "(with .csv and in the same folder): ").strip()
             if not filename.lower().endswith('.csv'):
                 print("Invalid file name. Please enter a filename with the .csv extension.")
                 continue
@@ -56,7 +56,7 @@ class AQIDataAnalyzer:
               " setting which is the the hourly AQI in site 1 - Keelung?", end = ' ') 
         is_done = False 
         while True:
-            answer = input(f"Enter Y to choose filter, N to use default setting: ").upper()
+            answer = input(f"Enter Y to choose filter, N to use default setting: ").strip().upper()
             if answer not in ['Y', 'N']:
                 print("Only Y or N allowed!!", end = ' ')
             else:
@@ -79,7 +79,7 @@ class AQIDataAnalyzer:
         print(f"Available site ids in the file: {available_ids}")
         is_valid = False
         while not is_valid:
-            siteid = input("[Filter 1] Please enter one site id listed above: ")
+            siteid = input("[Filter 1] Please enter one site id listed above: ").strip()
             if siteid.isdigit():
                 siteid = int(siteid)
                 if siteid in set(available_ids):
@@ -95,12 +95,12 @@ class AQIDataAnalyzer:
         get all pollutant.'''
         addition_cols = [col for col in columns if col not in self.basic_columns]
         valid_cols = ['pm2.5', 'so2', 'o3', 'co', 'pm10', 'no2', 'no']
-        intersection_set = set(addition_cols) and set(valid_cols)
+        intersection_set = set(addition_cols) & set(valid_cols)
         intersection_set.add('all')
         is_valid = False
         while not is_valid:
-            pollutant = input(f"[Filter 2] Please enter one pollutant among {intersection_set} "
-                              "('all' means plot all pollutants): ")
+            pollutant = input("[Filter 2] Please enter one pollutant among "
+                              f"{intersection_set} ('all' means plot all pollutants): ").strip()
             if pollutant.lower() in intersection_set:
                 is_valid = True 
             else:
@@ -192,11 +192,12 @@ class Plot:
         plt.legend()  
         plt.show()
 
+
 def continue_plot():
     '''This is to check the intention of user to see if they want to keep using 
     this program.'''
     while True:
-        continue_or_quit = input("Do you want to continue plotting or quit (c/q)? ")
+        continue_or_quit = input("Do you want to continue plotting or quit (c/q)? ").strip()
         if continue_or_quit == 'c':
             return True
         if continue_or_quit == 'q':
@@ -219,7 +220,7 @@ def set_filter(analyzer, df):
         if analyzer.need_filter() == 'Y':
             available_ids = analyzer.available_siteid(df)
             siteid = analyzer.set_siteid(available_ids) 
-            pollutant, intersection_set = analyzer.set_pollutant(columns) # already in lower the case
+            pollutant, intersection_set = analyzer.set_pollutant(columns)
             if pollutant == 'all':
                 plotter.plot_filtered_site_all_pollutants(siteid, intersection_set)
             else:
@@ -236,7 +237,8 @@ def main():
     analyzer = AQIDataAnalyzer()
     filename = analyzer.ask_file()
     df = pd.read_csv(filename)
-    df['datacreationdate'] = pd.to_datetime(df['datacreationdate']) # Convert 'datacreationdate' column to datetime type
+    # Convert 'datacreationdate' column to datetime type
+    df['datacreationdate'] = pd.to_datetime(df['datacreationdate']) 
     set_filter(analyzer, df)
 
 
