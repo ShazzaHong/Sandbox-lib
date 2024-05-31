@@ -113,7 +113,7 @@ def download_file(df_records, start_str, end_str, data_load_state):
     Secondly, save as a csv file with start and end DateTime. 
     New reminder will replace the original loading message.
     '''
-    start_str, end_str = start_str.rstrip(':00'), end_str.rstrip(':00')
+    #start_str, end_str = start_str.rstrip(':00'), end_str.rstrip(':00')
     csv = df_records.to_csv(index = False)
     st.download_button(
         label = "Download CSV",
